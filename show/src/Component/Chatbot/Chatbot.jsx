@@ -83,7 +83,7 @@ Main aapki kya madad kar sakta hoon? 👇`;
               </div>
               <div>
                 <h3 className="font-bold text-sm tracking-wide flex items-center gap-1">
-                  Me. Assistant <Sparkles size={14} className="text-[#C19A6B] fill-[#C19A6B]" />
+                  Trylo Assistant <Sparkles size={14} className="text-[#C19A6B] fill-[#C19A6B]" />
                 </h3>
                 <span className="text-[10px] text-green-400 font-medium flex items-center gap-1 mt-0.5">
                   <span className="w-1.5 h-1.5 bg-green-400 rounded-full inline-block"></span> Active Stylist
