@@ -166,7 +166,7 @@ const handleSubscribe = async (e) => {
            ======================================================== */}
         <div className="flex flex-col md:flex-row justify-between items-center pt-8 border-t border-zinc-900 gap-4">
           <p className="text-[10px] text-gray-500 uppercase tracking-widest text-center md:text-left">
-            © 2026 ME CLOTHING CO. ALL RIGHTS RESERVED.
+            © 2026 Trylo CLOTHING CO. ALL RIGHTS RESERVED.
           </p>
           <div className="flex flex-wrap justify-center items-center gap-4 opacity-40 text-gray-400 select-none">
              <span className="text-[9px] font-bold tracking-wider">VISA</span>
