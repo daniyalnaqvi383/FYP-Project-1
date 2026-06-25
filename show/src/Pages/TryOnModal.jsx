@@ -1,12 +1,74 @@
-import React, { useState } from 'react';
-import apiClient from '../api/apiClient'; // 👈 Step 1 wale file ka sahi path check kar lein
+import React, { useState, useEffect } from 'react';
+import apiClient from '../api/apiClient'; 
 import TryOnCanvas from './TryOnCanvas'; 
 
 const TryOnModal = ({ isOpen, onClose, product }) => {
+  const [allProducts, setAllProducts] = useState([]); 
+  const [filteredProducts, setFilteredProducts] = useState([]); // 🎯 For search filters
+  const [activeProduct, setActiveProduct] = useState(product);
   const [selectedFile, setSelectedFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [fetching, setFetching] = useState(true); 
   const [aiResult, setAiResult] = useState(null);
+  
+  // 🔍 Track search queries inside the model panel
+  const [searchQuery, setSearchQuery] = useState(""); 
+
+  // 🌐 FETCH ALL PRODUCTS ON MATRIX OPEN
+  useEffect(() => {
+    const fetchLiveProducts = async () => {
+      if (!isOpen) return;
+      try {
+        setFetching(true);
+        const res = await fetch("http://localhost:8030/api/product/");
+        const data = await res.json();
+        
+        if (data.success && Array.isArray(data.products)) {
+          // Sync reverse database records arrays
+          const reversedData = [...data.products].reverse();
+          setAllProducts(reversedData);
+          setFilteredProducts(reversedData); // Sync target query container
+          
+          if (!activeProduct && reversedData.length > 0) {
+            setActiveProduct(reversedData[0]);
+          }
+        }
+      } catch (error) {
+        console.error("Express router sync failure inside TryOnModal:", error);
+      } finally {
+        setFetching(false);
+      }
+    };
+
+    fetchLiveProducts();
+  }, [isOpen]);
+
+  // ⚡ DYNAMIC LIVE ENGINE FILTER MATRIX
+  useEffect(() => {
+    const cleanQuery = searchQuery.toLowerCase().trim();
+    
+    if (cleanQuery === "") {
+      setFilteredProducts(allProducts);
+    } else {
+      const filtered = allProducts.filter((item) => {
+        return (
+          item.name?.toLowerCase().includes(cleanQuery) ||
+          item.category?.toLowerCase().includes(cleanQuery) ||
+          item.subcategory?.toLowerCase().includes(cleanQuery) ||
+          item.styleType?.toLowerCase().includes(cleanQuery) ||
+          item.productType?.toLowerCase().includes(cleanQuery)
+        );
+      });
+      setFilteredProducts(filtered);
+    }
+  }, [searchQuery, allProducts]);
+
+  useEffect(() => {
+    if (product) {
+      setActiveProduct(product);
+    }
+  }, [product]);
 
   if (!isOpen) return null;
 
@@ -20,93 +82,175 @@ const TryOnModal = ({ isOpen, onClose, product }) => {
 
   const handleTryOnSubmit = async () => {
     if (!selectedFile) return alert("Please upload or capture a profile photo first.");
+    if (!activeProduct) return alert("Please select a target apparel item first.");
 
     setLoading(true);
     const formData = new FormData();
     formData.append("user_photo", selectedFile);
-    // ProductDetail logic ke mutabiq image paths main property array context mein hain
-    formData.append("product_image_url", product.images?.[0] || ""); 
-    formData.append("productId", product._id);           
+    
+    const targetImgUrl = activeProduct.images?.[0] || "";
+    formData.append("product_image_url", targetImgUrl); 
+    formData.append("productId", activeProduct._id);           
     formData.append("userId", "65f1a2b3c4d5e6f7a8b9c0d1"); 
 
     try {
-      // ⚡ Hit Node.js Backend Gateway (Port 8030)
       const response = await apiClient.post("/ai/process-tryon", formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
 
       if (response.data.success) {
-        // AI returns verified 2D textures straight into state
         setAiResult(response.data.data);
       }
     } catch (error) {
-      console.error("Critical breakdown hitting Express core route pipeline:", error);
-      alert("AI Pipeline Connection Refused. Please verify if Node backend and FastAPI are running on core ports.");
+      console.error("Express router pipeline failure:", error);
+      alert("AI Pipeline Connection Refused.");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm flex items-center justify-center p-4">
-      <div className="bg-white rounded-3xl max-w-4xl w-full p-6 shadow-2xl border border-gray-100 flex flex-col md:flex-row gap-6 relative animate-in fade-in zoom-in-95 duration-200">
+    <div className="fixed inset-0 z-50 bg-[#0d0d0d] text-white flex flex-col overflow-y-auto animate-in fade-in duration-300">
+      
+      {/* HEADER BLOCK */}
+      <header className="w-full border-b border-neutral-800/60 bg-[#0d0d0d]/90 backdrop-blur-md sticky top-0 z-30 px-6 py-4 flex justify-between items-center max-w-7xl mx-auto">
+        <div>
+          <span className="text-[10px] uppercase tracking-[0.3em] text-[#c5a880] block mb-1">Interactive Studio</span>
+          <h2 className="text-xl font-serif tracking-wide text-neutral-100">Virtual Try-On Center</h2>
+        </div>
+        <button 
+          onClick={onClose} 
+          className="px-5 py-2 rounded-sm border border-neutral-800 text-xs tracking-widest uppercase text-neutral-400 hover:bg-[#c5a880] hover:text-black hover:border-[#c5a880] transition-all duration-300"
+        >
+          Close Studio ✕
+        </button>
+      </header>
+
+      {/* THREE COLUMN GRID */}
+      <main className="w-full max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8 p-6 lg:p-8 flex-1">
         
-        <button onClick={onClose} className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition text-lg font-bold">✕</button>
+        {/* COLUMN 1: USER IMAGE UPLOAD */}
+        <section className="col-span-1 lg:col-span-3 bg-neutral-900/40 border border-neutral-800/60 p-5 rounded-2xl flex flex-col justify-between">
+          <div className="space-y-4">
+            <h3 className="text-xs uppercase tracking-widest text-[#c5a880] font-mono">01 / Your Photo</h3>
+            <div className="border border-neutral-800 bg-neutral-900/80 rounded-xl aspect-[3/4] flex flex-col items-center justify-center p-4 relative overflow-hidden">
+              {imagePreview ? (
+                <img src={imagePreview} alt="User Frame" className="w-full h-full object-cover rounded-lg" />
+              ) : (
+                <div className="text-center space-y-3">
+                  <div className="w-10 h-10 rounded-full border border-neutral-800 flex items-center justify-center mx-auto text-neutral-500">📸</div>
+                  <p className="text-[11px] text-neutral-500 font-light">Upload portrait photo.</p>
+                </div>
+              )}
+            </div>
+          </div>
+          <div className="mt-4">
+            <input type="file" accept="image/*" id="userPhotoInput" onChange={handleFileChange} className="hidden" />
+            <label htmlFor="userPhotoInput" className="w-full block text-center text-[11px] tracking-widest uppercase bg-neutral-900 border border-neutral-800 hover:border-neutral-700 text-neutral-300 py-3 rounded cursor-pointer transition">
+              {selectedFile ? "Change Image" : "Upload Image"}
+            </label>
+          </div>
+        </section>
 
-        {/* LEFT COMPARTMENT */}
-        <div className="flex-1 space-y-4">
-          <h3 className="text-xl font-bold text-gray-800 tracking-tight">AI Virtual Fitting Room</h3>
-          <p className="text-xs text-gray-500">Selected Product: <span className="font-semibold text-gray-700">{product.name}</span></p>
+        {/* COLUMN 2: LIVE PRODUCTS PANEL + INSTANT DYNAMIC SEARCH */}
+        <section className="col-span-1 lg:col-span-5 bg-neutral-900/40 border border-neutral-800/60 p-5 rounded-2xl flex flex-col justify-between">
+          <div className="space-y-4 w-full h-full flex flex-col">
+            <h3 className="text-xs uppercase tracking-widest text-[#c5a880] font-mono">02 / Select a Dress</h3>
+            
+            {/* Live Interactive Search Bar Input */}
+            <input 
+              type="text" 
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search fabrics, western styles, categories..." 
+              className="w-full bg-neutral-950 border border-neutral-800 rounded-lg px-4 py-2.5 text-xs text-neutral-300 focus:outline-none focus:border-[#c5a880]/60 transition"
+            />
 
-          <div className="border-2 border-dashed border-gray-200 rounded-2xl p-4 flex flex-col items-center justify-center bg-gray-50/50 min-h-[200px]">
-            {imagePreview ? (
-              <img src={imagePreview} alt="User Profile" className="h-40 object-contain rounded-xl shadow-sm" />
+            {fetching ? (
+              <div className="flex-1 flex flex-col items-center justify-center gap-2 text-xs font-mono text-neutral-500">
+                <div className="w-4 h-4 border border-neutral-700 border-t-[#c5a880] animate-spin rounded-full"></div>
+                <span>Syncing Database Catalog...</span>
+              </div>
             ) : (
-              <div className="text-center space-y-2">
-                <span className="text-2xl">📸</span>
-                <p className="text-xs text-gray-400">Upload your clear front-facing portrait photo</p>
+              <div className="flex-1 overflow-y-auto max-h-[340px] pr-2 grid grid-cols-2 gap-3 custom-scrollbar">
+                {/* 🔍 CRITICAL FIX: Loop updates to absolute filteredProducts to render query variations instantly */}
+                {filteredProducts.length === 0 ? (
+                  <div className="col-span-2 text-center text-xs text-neutral-500 font-mono py-12">
+                    No matching apparel found.
+                  </div>
+                ) : (
+                  filteredProducts.map((fab, index) => {
+                    const currentImage = fab.images?.[0] || "https://via.placeholder.com/150";
+                    return (
+                      <div 
+                        key={fab._id || index}
+                        onClick={() => setActiveProduct(fab)}
+                        className={`p-2 rounded-xl border cursor-pointer transition-all duration-300 bg-neutral-950/60 flex flex-col gap-2 ${
+                          activeProduct?._id === fab._id 
+                            ? 'border-[#c5a880] shadow-[0_0_15px_rgba(197,168,128,0.15)]' 
+                            : 'border-neutral-800/80 hover:border-neutral-700'
+                        }`}
+                      >
+                        <div className="w-full aspect-[4/5] bg-neutral-900 rounded-lg overflow-hidden relative">
+                          <img src={currentImage} alt={fab.name} className="w-full h-full object-cover" />
+                          {activeProduct?._id === fab._id && (
+                            <div className="absolute top-2 right-2 bg-[#c5a880] text-black text-[9px] uppercase font-mono tracking-widest px-1.5 py-0.5 rounded font-bold">Active</div>
+                          )}
+                        </div>
+                        <h4 className="text-[11px] text-neutral-300 font-light truncate px-1">{fab.name}</h4>
+                      </div>
+                    );
+                  })
+                )}
               </div>
             )}
-            <input type="file" accept="image/*" id="userPhotoInput" onChange={handleFileChange} className="hidden" />
-            <label htmlFor="userPhotoInput" className="mt-4 text-xs font-semibold bg-white text-gray-700 border border-gray-200 shadow-sm px-4 py-2 rounded-xl cursor-pointer hover:bg-gray-50 transition">
-              {selectedFile ? "Change Image" : "Select Image"}
-            </label>
+          </div>
+        </section>
+
+        {/* COLUMN 3: PREVIEW */}
+        <section className="col-span-1 md:col-span-2 lg:col-span-4 bg-neutral-900/40 border border-neutral-800/60 p-5 rounded-2xl flex flex-col justify-between">
+          <div className="space-y-4 flex-1 flex flex-col">
+            <h3 className="text-xs uppercase tracking-widest text-[#c5a880] font-mono">03 / Generate Look</h3>
+            
+            {activeProduct && (
+              <div className="flex gap-3 items-center p-2.5 bg-neutral-950/80 border border-neutral-800/60 rounded-xl">
+                <img src={activeProduct.images?.[0] || "https://via.placeholder.com/150"} className="w-12 h-14 object-cover rounded bg-neutral-900 shrink-0" alt="" />
+                <div className="overflow-hidden">
+                  <span className="text-[9px] uppercase tracking-wider text-neutral-500 font-mono">Target Selected</span>
+                  <h5 className="text-xs text-neutral-300 truncate font-light">{activeProduct.name}</h5>
+                </div>
+              </div>
+            )}
+
+            <div className="flex-1 w-full border border-neutral-800 bg-neutral-950 rounded-xl p-1.5 flex flex-col items-center justify-center min-h-[220px] relative">
+              {aiResult ? (
+                <div className="w-full h-full rounded-lg overflow-hidden">
+                  <TryOnCanvas textureUrl={aiResult.renderOutput2D} />
+                </div>
+              ) : (
+                <div className="text-center p-4 space-y-2">
+                  <p className="text-[11px] font-light text-neutral-500 max-w-[180px] mx-auto leading-relaxed">
+                    Select a dress from the center panel to begin.
+                  </p>
+                </div>
+              )}
+            </div>
           </div>
 
           <button 
             onClick={handleTryOnSubmit} 
-            disabled={loading}
-            className={`w-full py-3.5 rounded-xl font-bold text-sm tracking-wide transition shadow-lg shadow-blue-500/10 active:scale-[0.98] ${loading ? 'bg-gray-400 text-white cursor-not-allowed' : 'bg-blue-600 text-white hover:bg-blue-700'}`}
+            disabled={loading || !activeProduct}
+            className={`w-full py-3.5 rounded-md font-mono text-xs uppercase tracking-[0.2em] transition-all duration-300 shadow-xl mt-4 ${
+              loading 
+                ? 'bg-neutral-800 text-neutral-500 cursor-not-allowed border border-neutral-700/30' 
+                : 'bg-[#c5a880] text-black hover:bg-[#b0946f] font-bold'
+            }`}
           >
-            {loading ? "🧬 Synchronizing VITON-HD Core Deep Layers..." : "⚡ Run AI Virtual Try-On"}
+            {loading ? "🧬 Blending..." : "Generate Try-On"}
           </button>
-        </div>
+        </section>
 
-        {/* RIGHT COMPARTMENT: 3D INTERACTIVE CANVAS VIEWPORT */}
-        <div className="flex-1 border border-gray-100 rounded-2xl bg-gray-50/50 p-4 flex flex-col items-center justify-center min-h-[400px]">
-          {aiResult ? (
-            <div className="w-full h-full text-center space-y-4 flex flex-col">
-              <div className="flex items-center justify-between px-1">
-                <span className="text-[10px] bg-emerald-50 text-emerald-700 font-bold px-2 py-0.5 rounded uppercase tracking-wider">
-                  VITON-HD AI Complete
-                </span>
-                <span className="text-[10px] bg-blue-50 text-blue-700 font-bold px-2 py-0.5 rounded uppercase tracking-wider">
-                  Three.js 3D Viewer Active
-                </span>
-              </div>
-              
-              <div className="w-full flex-1 h-80 rounded-xl overflow-hidden shadow-md bg-white border border-gray-100">
-                <TryOnCanvas textureUrl={aiResult.renderOutput2D} />
-              </div>
-            </div>
-          ) : (
-            <p className="text-xs font-medium text-gray-400 text-center max-w-[240px] leading-relaxed">
-              Output configuration engine will activate interactive 3D simulation once AI returns verified textures.
-            </p>
-          )}
-        </div>
-
-      </div>
+      </main>
     </div>
   );
 };

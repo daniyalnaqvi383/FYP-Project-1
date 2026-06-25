@@ -10,6 +10,7 @@ import Timer from "../../Pages/Timer.jsx";
 import Feature from "../../Pages/Feature .jsx";
 import Footer from "../Footer/Footer.jsx";
 import CartPage from "../../Pages/Cartpage.jsx";
+import VirtualTryOnPromo from "../../Pages/VirtualTryOnPromo.jsx";
 
 function Hero() {
   const slides = [
@@ -170,7 +171,9 @@ function Hero() {
       </style>
     </div>
     <Catagories />
+    <VirtualTryOnPromo/>
     <Trending/>
+    
     <Timer/>
     <Feature/>
   

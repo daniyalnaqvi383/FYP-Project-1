@@ -17,6 +17,7 @@ import ShippingPolicy from './Pages/ShippingPolicy';
 import FAQs from './Pages/FAQs';
 import Careers from './Pages/Careers';
 import ScrollToTop from './ScrollToTop';
+import TryOnModal from './Pages/TryOnModal';
 
 function App() {
   return (
@@ -39,6 +40,9 @@ function App() {
       
         <Route path="/faqs" element={<FAQs/>} />
         <Route path="/careers" element={<Careers/>} />
+       // ⚡ Space saaf karke clean lowercase path lagayein
+<Route path="/virtual-room" element={<TryOnModal isOpen={true} onClose={() => window.history.back()} product={{}} />} />
+
        
 
       
