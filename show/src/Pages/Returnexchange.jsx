@@ -3,143 +3,99 @@ import { ShieldCheck, RefreshCw, Truck, Clock, HelpCircle, Mail, Phone } from 'l
 
 function Returnexchange() {
   return (
-    <div className="bg-white min-h-screen font-sans antialiased text-gray-800 w-full overflow-x-hidden">
+    <div className="bg-[#fcfcfc] min-h-screen text-neutral-900 w-full overflow-x-hidden">
       
-      {/* 1. HERO ACCENT HEADER */}
-      <div className="bg-gray-50 border-b border-gray-100 py-12 px-4 sm:px-6 md:px-8 text-center">
-        <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-gray-900 uppercase">
+      {/* 1. HEADER */}
+      <div className="bg-white border-b border-neutral-100 py-16 px-6 text-center">
+        <h1 className="text-3xl md:text-4xl font-serif font-medium uppercase tracking-widest text-neutral-950">
           Returns & Exchanges
         </h1>
-        <p className="mt-3 text-sm sm:text-base text-gray-500 max-w-2xl mx-auto leading-relaxed">
-          We want your **TryLo** experience to be absolutely flawless. If you experience any sizing issues or change your mind, our hassle-free policy is designed to support you.
+        <p className="mt-6 text-sm text-neutral-500 max-w-lg mx-auto font-light">
+          We want you to love your purchase. If you need to return or exchange an item, we are here to help make it easy for you.
         </p>
       </div>
 
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 py-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 py-16">
         
-        {/* 2. CORE POLICY FAST-TRACK CARDS (GRID SYSTEM) */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
-          
-          <div className="border border-gray-100 rounded-2xl p-6 text-center bg-white shadow-sm hover:shadow-md transition duration-300">
-            <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-amber-50 text-[#C19A6B] mb-4">
-              <Clock size={24} />
+        {/* 2. POLICY CARDS */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-20">
+          {[
+            { icon: Clock, title: "7 Days", desc: "You have 7 days after delivery to request a return or exchange." },
+            { icon: ShieldCheck, title: "Unused Items", desc: "Items must be unworn, unwashed, and have their original tags." },
+            { icon: Truck, title: "Easy Pickup", desc: "We arrange pickup for you in major cities. It's very simple." },
+            { icon: RefreshCw, title: "Fast Process", desc: "Once we receive your item, we process your request in 3-4 days." }
+          ].map((item, idx) => (
+            <div key={idx} className="border border-neutral-100 bg-white p-8 text-center shadow-sm">
+              <div className="mx-auto flex h-12 w-12 items-center justify-center bg-neutral-100 text-[#C19A6B] mb-6 rounded-full">
+                <item.icon size={22} />
+              </div>
+              <h3 className="text-xs font-bold uppercase tracking-widest">{item.title}</h3>
+              <p className="mt-3 text-xs text-neutral-500 font-light leading-relaxed">{item.desc}</p>
             </div>
-            <h3 className="text-base font-bold text-gray-900">7-Day Window</h3>
-            <p className="mt-2 text-xs text-gray-500 leading-relaxed">
-              Customers have a dedicated window of **7 days** from the delivery date to initiate an exchange or return claim.
-            </p>
-          </div>
-
-          <div className="border border-gray-100 rounded-2xl p-6 text-center bg-white shadow-sm hover:shadow-md transition duration-300">
-            <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600 mb-4">
-              <ShieldCheck size={24} />
-            </div>
-            <h3 className="text-base font-bold text-gray-900">100% Pristine</h3>
-            <p className="mt-2 text-xs text-gray-500 leading-relaxed">
-              Products must remain completely unworn, unwashed, and intact with all original brand tags attached.
-            </p>
-          </div>
-
-          <div className="border border-gray-100 rounded-2xl p-6 text-center bg-white shadow-sm hover:shadow-md transition duration-300">
-            <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-blue-50 text-blue-600 mb-4">
-              <Truck size={24} />
-            </div>
-            <h3 className="text-base font-bold text-gray-900">Reverse Logistics</h3>
-            <p className="mt-2 text-xs text-gray-500 leading-relaxed">
-              We arrange reverse pickup services in major domestic cities, or you can ship back via any authorized courier.
-            </p>
-          </div>
-
-          <div className="border border-gray-100 rounded-2xl p-6 text-center bg-white shadow-sm hover:shadow-md transition duration-300">
-            <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-purple-50 text-purple-600 mb-4">
-              <RefreshCw size={24} />
-            </div>
-            <h3 className="text-base font-bold text-gray-900">Swift Processing</h3>
-            <p className="mt-2 text-xs text-gray-500 leading-relaxed">
-              Once verified at our fulfillment center, claims are completely processed within **3 to 4 working days**.
-            </p>
-          </div>
-
+          ))}
         </div>
 
-        {/* 3. POLICY IN-DEPTH INFORMATION DETAILS */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start mb-16">
+        {/* 3. DETAILS & CONTACT */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-start">
           
-          {/* Detailed Terms block */}
-          <div className="lg:col-span-7 space-y-8">
+          <div className="lg:col-span-7 space-y-12">
             <div>
-              <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 tracking-tight">Terms & Conditions</h2>
-              <div className="h-1 w-12 bg-[#C19A6B] mb-6"></div>
-              
-              <ul className="space-y-4 text-sm text-gray-600 leading-relaxed list-disc pl-5">
-                <li>A comprehensive **7-day exchange and return policy** applies to any verified manufacturing defects or dynamic sizing misfits.</li>
-                <li>Items purchased under **Sales or Promotional Campaigns** are eligible for exchange tracking metrics, while standard monetary refunds remain restricted.</li>
-                <li>Product structural conditions must be original. Product containers, safety tags, barcodes, and invoices are mandatory verification components.</li>
-                <li>In cases where a faulty article, wrong sizing layout, or damaged piece was dispatched from our end, all reverse logistics charges will be fully covered by **TryLo**.</li>
+              <h2 className="text-lg font-bold uppercase tracking-widest mb-6 border-l-2 border-[#C19A6B] pl-4">Policy Rules</h2>
+              <ul className="space-y-4 text-sm text-neutral-600 font-light list-none">
+                <li className="flex gap-3"><span>•</span> You can return or exchange any item within 7 days of receiving it.</li>
+                <li className="flex gap-3"><span>•</span> Sale items can be exchanged, but we do not offer monetary refunds.</li>
+                <li className="flex gap-3"><span>•</span> Please keep all tags and the original packaging.</li>
+                <li className="flex gap-3"><span>•</span> If you received a damaged item, we will pay for the return shipping.</li>
               </ul>
             </div>
 
             <div>
-              <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 tracking-tight">How to Request an Exchange?</h2>
-              <div className="h-1 w-12 bg-[#C19A6B] mb-6"></div>
-              
-              <div className="space-y-4">
-                <div className="flex gap-4 items-start">
-                  <div className="font-mono text-xs font-bold bg-black text-white rounded-full h-6 w-6 flex items-center justify-center shrink-0 mt-0.5">1</div>
-                  <p className="text-sm text-gray-600"><span className="font-bold text-gray-900">Logistics Registration:</span> Get in touch with our consumer support helpdesk with your authentic Order ID and verified parameters.</p>
-                </div>
-                <div className="flex gap-4 items-start">
-                  <div className="font-mono text-xs font-bold bg-black text-white rounded-full h-6 w-6 flex items-center justify-center shrink-0 mt-0.5">2</div>
-                  <p className="text-sm text-gray-600"><span className="font-bold text-gray-900">Quality Control Audit:</span> Our dedicated audit cell evaluates the package upon arrival to confirm factory deployment compliance standards.</p>
-                </div>
-                <div className="flex gap-4 items-start">
-                  <div className="font-mono text-xs font-bold bg-black text-white rounded-full h-6 w-6 flex items-center justify-center shrink-0 mt-0.5">3</div>
-                  <p className="text-sm text-gray-600"><span className="font-bold text-gray-900">Fresh Dispatch Allocation:</span> Your freshly processed exchange selection item is triggered into transit pipelines without any extra charge overheads.</p>
-                </div>
+              <h2 className="text-lg font-bold uppercase tracking-widest mb-8 border-l-2 border-[#C19A6B] pl-4">How to start</h2>
+              <div className="space-y-6">
+                {[
+                  { n: "01", t: "Contact Us", d: "Message our support team with your order number." },
+                  { n: "02", t: "Send it back", d: "We will arrange a pickup or guide you on how to ship it to us." },
+                  { n: "03", t: "Get your item", d: "Once we check the item, we will send your exchange or process the request." }
+                ].map((step) => (
+                  <div key={step.n} className="flex gap-6 items-start">
+                    <span className="text-lg font-mono text-[#C19A6B] font-bold">{step.n}</span>
+                    <div>
+                      <h4 className="font-bold text-neutral-900">{step.t}</h4>
+                      <p className="text-sm text-neutral-500 mt-1 font-light">{step.d}</p>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
 
-          {/* 4. HELP & INSTANT CONTACT SIDEBAR INFODESK */}
-          <div className="lg:col-span-5 bg-gray-50 border border-gray-100 rounded-3xl p-6 sm:p-8 space-y-6">
-            <div className="flex items-center gap-2 text-gray-900">
-              <HelpCircle className="text-[#C19A6B]" size={22} />
-              <h3 className="text-lg font-bold tracking-tight">Need Instant Assistance?</h3>
+          {/* CONTACT SIDEBAR */}
+          <div className="lg:col-span-5 bg-neutral-900 text-white p-8 space-y-8 rounded-sm">
+            <div className="flex items-center gap-3">
+              <HelpCircle className="text-[#C19A6B]" size={24} />
+              <h3 className="text-sm font-bold uppercase tracking-widest">Need Help?</h3>
             </div>
             
-            <p className="text-xs text-gray-500 leading-relaxed">
-              If you run into any systematic errors while raising a replacement or exchange pipeline, contact our dedicated support networks immediately.
-            </p>
-
-            <div className="space-y-4">
-              <div className="flex items-center gap-4 bg-white p-4 rounded-xl border border-gray-100 shadow-sm">
-                <div className="text-blue-600 bg-blue-50 p-2.5 rounded-lg">
-                  <Mail size={18} />
-                </div>
-                <div className="min-w-0 flex-1">
-                  <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wide">Email Support</p>
-                  <p className="text-sm font-semibold text-gray-900 font-mono truncate">support@trylo.com</p>
+            <div className="space-y-6">
+              <div className="flex items-center gap-4 border-b border-neutral-800 pb-6">
+                <Mail size={20} className="text-[#C19A6B]" />
+                <div>
+                  <p className="text-[10px] uppercase text-neutral-400 tracking-wider">Email Us</p>
+                  <p className="text-sm mt-1">support@trylo.com</p>
                 </div>
               </div>
-
-              <div className="flex items-center gap-4 bg-white p-4 rounded-xl border border-gray-100 shadow-sm">
-                <div className="text-emerald-600 bg-emerald-50 p-2.5 rounded-lg">
-                  <Phone size={18} />
-                </div>
-                <div className="min-w-0 flex-1">
-                  <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wide">WhatsApp Helpline</p>
-                  <p className="text-sm font-semibold text-gray-900 font-mono">+92 300 1234567</p>
+              <div className="flex items-center gap-4">
+                <Phone size={20} className="text-[#C19A6B]" />
+                <div>
+                  <p className="text-[10px] uppercase text-neutral-400 tracking-wider">Call or WhatsApp</p>
+                  <p className="text-sm mt-1">+92 311 1100439</p>
                 </div>
               </div>
             </div>
-
-            <div className="pt-4 border-t border-gray-200/60 text-[11px] text-gray-400 text-center leading-normal">
-              Timings: 10:00 AM to 06:00 PM (Monday - Saturday)
-            </div>
+            
+            <p className="text-[10px] text-neutral-500 italic">Available: Mon-Sat (10am - 6pm)</p>
           </div>
-
         </div>
-
       </div>
     </div>
   );

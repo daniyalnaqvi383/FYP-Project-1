@@ -3,74 +3,68 @@ import { Sparkles, Shirt, Eye, Target, Camera, Cpu, Layers } from 'lucide-react'
 
 function AboutUS() {
   return (
-    <div className="bg-white min-h-screen font-sans antialiased text-gray-900 w-full overflow-x-hidden">
+    <div className="bg-[#fcfcfc] min-h-screen text-neutral-900 w-full overflow-x-hidden selection:bg-[#C19A6B] selection:text-white">
       
       {/* 1. HERO VISION BLOCK */}
-      <div className="relative bg-gradient-to-b from-gray-50 to-white py-24 px-4 sm:px-6 md:px-8 text-center border-b border-gray-100">
+      <div className="relative py-24 sm:py-32 px-6 text-center border-b border-neutral-100">
         <div className="max-w-4xl mx-auto">
-          <span className="text-xs font-bold uppercase tracking-widest text-[#C19A6B] bg-amber-50 px-3 py-1 rounded-full inline-block mb-4">
-            The Future of Fashion is Here
+          <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-[#C19A6B] mb-4 block">
+            // The Future of Retail
           </span>
-          <h1 className="text-4xl sm:text-6xl font-black tracking-tight text-gray-900 uppercase mb-6 leading-tight">
-            Smart Tailoring. <br/>
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-gray-900 via-[#C19A6B] to-gray-700">
-              Virtual Perfection.
-            </span>
+          <h1 className="text-4xl sm:text-6xl font-serif font-medium tracking-tight text-neutral-950 uppercase mb-8 leading-[1.1]">
+            Tailoring <br/>
+            <span className="italic font-light">Digital Perfection.</span>
           </h1>
-          <p className="text-base sm:text-xl text-gray-500 max-w-2xl mx-auto leading-relaxed">
-            At **TryLo**, we are breaking the traditional boundaries of e-commerce. We fuse high-end 
-            craftsmanship with innovative technology to make clothing intuitive, fast, and precisely personalized.
+          <p className="text-base sm:text-lg text-neutral-500 max-w-2xl mx-auto leading-relaxed font-light">
+            At <span className="font-semibold text-neutral-900">TryLo</span>, we are bridging the gap between bespoke craftsmanship and digital precision. We make high-end fashion intuitive, fast, and uniquely yours.
           </p>
         </div>
       </div>
 
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 py-20">
+      <div className="max-w-7xl mx-auto px-6 py-20">
         
-        {/* 2. ⚡ BRAND FLAGSHIP FEATURE: VIRTUAL TRY-ON DEPLOYMENT SHOWCASE */}
-        <div className="bg-black text-white rounded-3xl p-8 sm:p-12 md:p-16 mb-24 relative overflow-hidden shadow-2xl">
-          <div className="absolute top-0 right-0 w-96 h-96 bg-[#C19A6B] opacity-10 rounded-full blur-3xl -mr-20 -mt-20"></div>
+        {/* 2. ⚡ VIRTUAL TRY-ON DEPLOYMENT SHOWCASE */}
+        <div className="bg-[#070707] text-white rounded-sm p-8 sm:p-16 mb-24 relative overflow-hidden shadow-2xl">
+          <div className="absolute top-0 right-0 w-96 h-96 bg-[#C19A6B] opacity-5 rounded-full blur-[128px] -mr-20 -mt-20"></div>
           
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center relative z-10">
-            {/* Text Grid Area */}
-            <div className="lg:col-span-7 space-y-6">
-              <span className="text-xs font-bold uppercase tracking-widest text-[#C19A6B] flex items-center gap-2">
-                <Cpu size={14} /> AI-Powered Innovation
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center relative z-10">
+            <div className="lg:col-span-7 space-y-8">
+              <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-[#C19A6B] flex items-center gap-2">
+                <Cpu size={14} /> AI-Powered Engine
               </span>
-              <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-white uppercase">
-                See How It Fits Before You Buy
+              <h2 className="text-3xl sm:text-5xl font-serif tracking-tight text-white uppercase leading-tight">
+                Preview the fit <br/>
+                <span className="italic font-light">before the buy.</span>
               </h2>
-              <p className="text-sm sm:text-base text-gray-400 leading-relaxed">
-                No more guessing games with size charts or worrying about returns. TryLo introduces a sophisticated 
-                **2D Photorealistic AI Virtual Try-On Assistant**. By projecting advanced cloth rendering frameworks directly 
-                onto your uploaded picture, you see exactly how the garment falls, drapes, and adjusts to your physique.
+              <p className="text-sm sm:text-base text-neutral-400 leading-relaxed font-light">
+                Forget size charts and guessing. TryLo's <span className="text-white font-medium">2D Photorealistic AI Assistant</span> projects garments onto your profile with pixel-perfect accuracy. See exactly how the fabric falls, drapes, and adjusts to your physique in real-time.
               </p>
 
-              {/* Try-On Step Flow Vectors */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4 border-t border-gray-800/80">
-                <div className="flex gap-3 items-center">
-                  <div className="p-2 rounded-lg bg-gray-900 text-[#C19A6B] border border-gray-800"><Camera size={16}/></div>
-                  <div className="text-xs"><p className="font-bold">1. Upload Photo</p><p className="text-gray-500">Snap a quick picture</p></div>
-                </div>
-                <div className="flex gap-3 items-center">
-                  <div className="p-2 rounded-lg bg-gray-900 text-[#C19A6B] border border-gray-800"><Shirt size={16}/></div>
-                  <div className="text-xs"><p className="font-bold">2. Choose Article</p><p className="text-gray-500">Pick Eastern or Western</p></div>
-                </div>
-                <div className="flex gap-3 items-center">
-                  <div className="p-2 rounded-lg bg-gray-900 text-[#C19A6B] border border-gray-800"><Layers size={16}/></div>
-                  <div className="text-xs"><p className="font-bold">3. Live Simulation</p><p className="text-gray-500">Instant realistic check</p></div>
-                </div>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 pt-8 border-t border-neutral-800">
+                {[
+                  { icon: Camera, t: "1. Upload Photo", d: "A simple front-facing snapshot." },
+                  { icon: Shirt, t: "2. Choose Style", d: "Select from our premium catalog." },
+                  { icon: Layers, t: "3. See Result", d: "Instant realistic simulation." }
+                ].map((step, i) => (
+                  <div key={i} className="flex gap-4 items-start">
+                    <div className="p-3 rounded-sm bg-neutral-800 text-[#C19A6B]"><step.icon size={18}/></div>
+                    <div>
+                      <p className="text-xs font-bold uppercase tracking-wider text-white">{step.t}</p>
+                      <p className="text-[10px] text-neutral-500 mt-1">{step.d}</p>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
 
-            {/* Visual Interactive Block Mockup Area */}
+            {/* Visual Interactive Block */}
             <div className="lg:col-span-5 flex justify-center">
-              <div className="border border-gray-800 bg-gray-900/60 p-6 rounded-2xl w-full max-w-sm text-center space-y-4 shadow-inner">
-                <div className="w-full h-48 bg-gray-800 rounded-xl border border-dashed border-gray-700 flex flex-col items-center justify-center text-gray-500 p-4">
-                  <div className="h-10 w-10 bg-black rounded-full flex items-center justify-center text-[#C19A6B] mb-2"><Camera size={20}/></div>
-                  <p className="text-xs font-bold text-white">Virtual Fitting Room</p>
-                  <p className="text-[10px] text-gray-500 mt-1">Upload your standard front-facing profile image</p>
+              <div className="border border-neutral-800 bg-neutral-900/50 p-8 rounded-sm w-full max-w-sm text-center space-y-6">
+                <div className="w-full h-48 bg-neutral-800 rounded-sm flex flex-col items-center justify-center text-neutral-500">
+                  <Camera size={32} className="mb-2 opacity-50"/>
+                  <p className="text-[10px] uppercase tracking-widest text-neutral-400">Virtual Room Ready</p>
                 </div>
-                <button type="button" className="w-full bg-[#C19A6B] hover:bg-opacity-90 text-white text-xs font-bold uppercase tracking-widest py-3 rounded-xl transition">
+                <button className="w-full bg-[#C19A6B] text-white text-[10px] font-bold uppercase tracking-[0.2em] py-4 rounded-sm transition hover:bg-[#b08759]">
                   Activate Try-On
                 </button>
               </div>
@@ -78,61 +72,35 @@ function AboutUS() {
           </div>
         </div>
 
-        {/* 3. CORE MISSION & VALUE STATEMENTS */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-start mb-24">
-          <div className="space-y-4">
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-amber-50 text-[#C19A6B]">
-              <Target size={24} />
+        {/* 3. CORE COMMITMENTS */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-16 mb-24 items-center">
+          {[
+            { icon: Target, title: "Our Commitment", desc: "Specializing in high-end Eastern Wash & Wear and Western smart-casuals. We provide premium cloth lines engineered for a modern lifestyle." },
+            { icon: Eye, title: "Precision Standard", desc: "Every piece undergoes strict textile strength and stitching audits. TryLo means flawless fits and long-lasting fabric integrity." }
+          ].map((item, i) => (
+            <div key={i} className="space-y-6 border-l-2 border-[#C19A6B] pl-8">
+              <item.icon className="text-[#C19A6B]" size={28} />
+              <h3 className="text-2xl font-serif font-medium tracking-tight text-neutral-950">{item.title}</h3>
+              <p className="text-sm text-neutral-500 leading-relaxed font-light">{item.desc}</p>
             </div>
-            <h3 className="text-2xl font-bold text-gray-900 tracking-tight">Our Core Commitment</h3>
-            <p className="text-sm sm:text-base text-gray-500 leading-relaxed">
-              We specialize in offering high-end Eastern Wash & Wear Kurtas and structural Western smart-casual polos. 
-              Our priority is simple: provide boutique premium standard cloth lines engineered dynamically for the modern lifestyle.
-            </p>
-          </div>
-
-          <div className="space-y-4">
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gray-50 text-gray-900">
-              <Eye size={24} />
-            </div>
-            <h3 className="text-2xl font-bold text-gray-900 tracking-tight">The Precision Standard</h3>
-            <p className="text-sm sm:text-base text-gray-500 leading-relaxed">
-              Every sample undergoes strict textile strength metrics and stitching evaluation pipelines. TryLo stands 
-              for flawless drop fits, premium long-lasting colors, and maximum breathing fiber metrics.
-            </p>
-          </div>
+          ))}
         </div>
 
-        {/* 4. THREE BRAND METRIC PILLARS */}
-        <div className="border-t border-gray-100 pt-16">
-          <h3 className="text-xl sm:text-2xl font-extrabold text-gray-900 uppercase tracking-tight text-center mb-12">
-            The TryLo Product Architecture
-          </h3>
-          
+        {/* 4. BRAND PILLARS */}
+        <div className="border-t border-neutral-100 pt-20">
+          <h3 className="text-xs font-bold text-neutral-900 uppercase tracking-[0.3em] text-center mb-16">The Architecture</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            <div className="p-6 bg-gray-50 rounded-2xl border border-gray-100">
-              <div className="text-[#C19A6B] mb-3"><Shirt size={22} /></div>
-              <h4 className="font-bold text-gray-900 text-base mb-2">Luxury Source Fabrics</h4>
-              <p className="text-xs sm:text-sm text-gray-500 leading-relaxed">
-                Curating fine Egyptian cotton, high-density interlock polo blends, and flawless fall wash-and-wear structures.
-              </p>
-            </div>
-
-            <div className="p-6 bg-gray-50 rounded-2xl border border-gray-100">
-              <div className="text-[#C19A6B] mb-3"><Sparkles size={22} /></div>
-              <h4 className="font-bold text-gray-900 text-base mb-2">AI Wardrobe Guidance</h4>
-              <p className="text-xs sm:text-sm text-gray-500 leading-relaxed">
-                Integrating personalized digital assistants to evaluate your perfect sizes, styling aesthetics, and combo matchings.
-              </p>
-            </div>
-
-            <div className="p-6 bg-gray-50 rounded-2xl border border-gray-100 sm:col-span-2 lg:col-span-1">
-              <div className="text-[#C19A6B] mb-3"><Layers size={22} /></div>
-              <h4 className="font-bold text-gray-900 text-base mb-2">Zero-Risk Purchase</h4>
-              <p className="text-xs sm:text-sm text-gray-500 leading-relaxed">
-                Pairing virtual fitting clarity with our standard 7-day hassle-free replacement or reverse return security claims.
-              </p>
-            </div>
+            {[
+              { icon: Shirt, title: "Luxury Textiles", desc: "Sourcing only the finest cottons and breathable blends for maximum comfort." },
+              { icon: Sparkles, title: "AI Wardrobe Guidance", desc: "Tech-native assistants to help you find your perfect fit and style combinations." },
+              { icon: Layers, title: "Zero-Risk Policy", desc: "Clear fitting data paired with our 7-day hassle-free return and exchange security." }
+            ].map((p, i) => (
+              <div key={i} className="p-8 bg-neutral-50 border border-neutral-100 rounded-sm hover:border-[#C19A6B] transition-colors">
+                <div className="text-[#C19A6B] mb-6"><p.icon size={24} /></div>
+                <h4 className="font-bold text-neutral-950 text-sm mb-3 uppercase tracking-wider">{p.title}</h4>
+                <p className="text-xs text-neutral-500 leading-relaxed font-light">{p.desc}</p>
+              </div>
+            ))}
           </div>
         </div>
 

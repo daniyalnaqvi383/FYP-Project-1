@@ -1,20 +1,20 @@
 import React, { useEffect, useState } from "react";
-import { Menu, X, ShoppingCart, Search, User, Plus, Minus, ChevronDown, ShoppingBag, ShoppingBasket, ShoppingBasketIcon, ShoppingBagIcon } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom"; // 👈 Added useNavigate for search query routing redirection
+import { Menu, X, Search, User, Plus, Minus, ChevronDown, ShoppingBag, LogOut } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom"; 
 import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
 import { removeFromCart, openCart, closeCart, addToCart } from "../../redux/cartSlice.js"; 
-import logo from "../../assets/logo.png"; // 👈 Logo image import
-import { FaFontAwesome, FaShoppingBag, FaShoppingCart, FaWhatsapp } from "react-icons/fa";
+import logo from "../../assets/logo.png"; 
+import { FaWhatsapp } from "react-icons/fa";
 
 function Navbar() {
-  const navigate = useNavigate(); // Hook initializer
+  const navigate = useNavigate(); 
   const [isOpen, setIsOpen] = useState(false);
   const [user, setUser] = useState(null);
   const [dropdown, setDropdown] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
   const [mobileDropdown, setMobileDropdown] = useState("");
-  const [searchQuery, setSearchQuery] = useState(""); // 👈 Tracks live query data inputs inside the box
+  const [searchQuery, setSearchQuery] = useState(""); 
 
   const dispatch = useDispatch();
   const cartItems = useSelector((state) => state.cart.items);
@@ -64,9 +64,9 @@ function Navbar() {
     localStorage.removeItem("token");
     setUser(null);
     setDropdown(false);
+    setIsOpen(false);
   };
 
-  // HANDLERS FOR QUANTITY
   const handleIncreaseQuantity = (item) => {
     dispatch(addToCart({ ...item, quantity: 1 }));
   };
@@ -79,17 +79,13 @@ function Navbar() {
     }
   };
 
-  // ============================================
-  // ⚡ DISPATCH GLOBAL CATALOG SEARCH HANDLER
-  // ============================================
   const handleSearchSubmit = (e) => {
     if (e.key === "Enter" || e.type === "click") {
       e.preventDefault();
       if (searchQuery.trim() !== "") {
-        // Dynamic forwarding redirection parameter matching global listProduct query parameters
         navigate(`/shop?search=${encodeURIComponent(searchQuery.trim())}`);
-        setShowSearch(false); // Collapses the search layout layer
-        setSearchQuery(""); // Flushes tracking data clean
+        setShowSearch(false); 
+        setSearchQuery(""); 
       }
     }
   };
@@ -107,14 +103,13 @@ function Navbar() {
           </button>
 
           {/* LOGO */}
-         <Link to="/" className="flex items-center h-full py-2">
-  <img 
-    src={logo} 
-    alt="TryLo Logo" 
-    className="h-25 w-auto object-contain transition-transform duration-300 hover:scale-105" 
-    
-  />
-</Link>
+          <Link to="/" className="flex items-center h-full py-2">
+            <img 
+              src={logo} 
+              alt="TryLo Logo" 
+              className="h-25 w-auto object-contain transition-transform duration-300 hover:scale-105" 
+            />
+          </Link>
 
           {/* DESKTOP MENU */}
           <div className="hidden md:flex items-center space-x-8 font-medium text-gray-800 relative">
@@ -124,7 +119,6 @@ function Navbar() {
               className="relative group transition duration-300 hover:text-[#C19A6B]"
             >
               Home
-              {/* underline animation */}
               <span className="absolute left-0 -bottom-1 w-0 h-[2px] bg-[#C19A6B] transition-all duration-300 group-hover:w-full"></span>
             </Link>
 
@@ -218,13 +212,18 @@ function Navbar() {
               Return & Exchange
             </Link>
 
+            {/* ⚡ DESKTOP LINK BUTTON: TRY ON CLOTH */}
+            <Link to="/virtual-room" className="hover:text-[#C19A6B] transition font-bold text-[#C19A6B]">
+              Try On Cloth
+            </Link>
+
           </div>
 
           {/* ICONS */}
           <div className="flex items-center space-x-3 md:space-x-5">
 
-            {/* SEARCH CONTAINER WITH DISPATCH PROCEDURES */}
-            <div className="relative hidden sm:block">
+            {/* SEARCH CONTAINER (Stays visible on top for both mobile & desktop) */}
+            <div className="relative">
               <button onClick={() => setShowSearch(!showSearch)} className="flex items-center justify-center p-1">
                 <Search size={22} />
               </button>
@@ -233,15 +232,15 @@ function Navbar() {
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  onKeyDown={handleSearchSubmit} // 👈 Redirects instantly on press enter key code
-                  className="absolute top-12 right-0 border border-gray-200 px-4 py-2 rounded-full w-64 bg-white text-sm text-black focus:outline-none focus:ring-1 focus:ring-[#C19A6B] placeholder-gray-400 shadow-lg animate-fadeIn"
+                  onKeyDown={handleSearchSubmit} 
+                  className="absolute top-12 right-0 border border-gray-200 px-4 py-2 rounded-full w-48 sm:w-64 bg-white text-sm text-black focus:outline-none focus:ring-1 focus:ring-[#C19A6B] placeholder-gray-400 shadow-lg"
                   placeholder="Search products..."
                   autoFocus
                 />
               )}
             </div>
 
-            {/* USER */}
+            {/* USER PORTAL DESKTOP ONLY */}
             <div className="hidden md:block">
               {!user ? (
                 <Link to="/signup"><User size={22} /></Link>
@@ -254,7 +253,7 @@ function Navbar() {
                     {user.name?.charAt(0)}
                   </button>
                   {dropdown && (
-                    <div className="absolute right-0 mt-3 w-48 bg-white shadow-xl p-2">
+                    <div className="absolute right-0 mt-3 w-48 bg-white shadow-xl p-2 z-50">
                       <p className="px-2 text-sm">{user.name}</p>
                       <button onClick={handleLogout} className="text-[#C19A6B] px-2 py-2">
                         Logout
@@ -272,20 +271,22 @@ function Navbar() {
                 {cartItems.reduce((acc, curr) => acc + (curr.quantity || 1), 0)}
               </span>
             </button>
+
+            {/* WHATSAPP */}
             <a
-    href="https://wa.me/923484236919?text=Hi%20I%20want%20to%20know%20more%20about%20your%20products"
-    target="_blank"
-    rel="noopener noreferrer"
-    className="whatsapp-icon"
-    style={{ marginLeft: '15px', color: '#25D366', fontSize: '30px' }}
-  >
-    <FaWhatsapp />
-  </a>
+              href="https://wa.me/923484236919?text=Hi%20I%20want%20to%20know%20more%20about%20your%20products"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ marginLeft: '15px', color: '#25D366', fontSize: '30px' }}
+              className="flex items-center"
+            >
+              <FaWhatsapp />
+            </a>
           </div>
         </div>
       </div>
 
-      {/* CART SIDEBAR */}
+      {/* CART SIDEBAR (SCROLLABLE AREA) */}
       <div
         className={`fixed inset-0 z-[100] ${isCartOpen ? "bg-black/50" : "hidden"}`}
         onClick={() => dispatch(closeCart())}
@@ -296,7 +297,6 @@ function Navbar() {
           }`}
           onClick={(e) => e.stopPropagation()}
         >
-          {/* CART HEADER */}
           <div className="p-5 flex justify-between items-center border-b border-gray-100">
             <h1 className="text-lg font-medium tracking-wide uppercase text-gray-800">Cart</h1>
             <button className="text-gray-400 hover:text-black transition" onClick={() => dispatch(closeCart())}>
@@ -304,7 +304,6 @@ function Navbar() {
             </button>
           </div>
 
-          {/* CART ITEMS LIST (SCROLLABLE AREA) */}
           <div className="p-5 space-y-6 overflow-y-auto flex-1 custom-scrollbar">
             {cartItems.length === 0 ? (
               <p className="text-gray-400 text-center mt-8 text-sm">Your cart is currently empty.</p>
@@ -350,7 +349,6 @@ function Navbar() {
             )}
           </div>
 
-          {/* TOTAL & CHECKOUT SECTION */}
           <div className="w-full p-5 border-t border-gray-100 bg-white shadow-[0_-4px_20px_rgba(0,0,0,0.02)]">
             {cartItems.length > 0 && (
               <div className="flex justify-between mb-5 font-medium text-xs uppercase tracking-wider text-gray-500">
@@ -367,99 +365,133 @@ function Navbar() {
         </div>
       </div>
 
-      {/* MOBILE MENU */}
+      {/* 📥 RESPONSIVE MOBILE MENU DRAWER (WHITE BACKGROUND) */}
       <div
         className={`fixed inset-0 bg-black/50 md:hidden ${isOpen ? "visible" : "hidden"}`}
         onClick={() => setIsOpen(false)}
       >
         <div
-          className={`bg-white w-[280px] h-full p-5 transition-transform ${
+          className={`bg-white w-[280px] h-full p-5 flex flex-col justify-between transition-transform ${
             isOpen ? "translate-x-0" : "-translate-x-full"
           }`}
           onClick={(e) => e.stopPropagation()}
         >
-          <div className="flex justify-between mb-5">
-            <h2 className="font-bold">Menu</h2>
-            <X onClick={() => setIsOpen(false)} />
-          </div>
+          <div className="flex flex-col gap-4 overflow-y-auto flex-1">
+            <div className="flex justify-between mb-5 items-center">
+              <h2 className="font-bold text-black uppercase tracking-wider text-sm">Menu</h2>
+              <X onClick={() => setIsOpen(false)} className="text-black cursor-pointer" />
+            </div>
 
-          <div className="flex flex-col gap-4">
-            <Link to="/" onClick={() => setIsOpen(false)}>Home</Link>
-
-            {/* MEN */}
-            <div>
-              <button
-                onClick={() => setMobileDropdown(mobileDropdown === "men" ? "" : "men")}
-                className="flex items-center justify-between w-full font-medium"
-              >
-                Men
-                <ChevronDown size={16} className={`transition-transform ${mobileDropdown === "men" ? "rotate-180" : ""}`} />
-              </button>
-
-              {mobileDropdown === "men" && (
-                <div className="pl-3 mt-2 flex flex-col gap-2 text-sm">
-                  <p className="font-semibold text-xs text-gray-400 uppercase tracking-wider">Eastern</p>
-                  <Link to="/shop?category=men&styleType=eastern&subcategory=kurta" onClick={() => setIsOpen(false)}>Kurta</Link>
-
-                  <p className="font-semibold text-xs text-gray-400 uppercase tracking-wider mt-2">Western</p>
-                  <Link to="/shop?category=men&styleType=western&subcategory=polo" onClick={() => setIsOpen(false)}>Polo</Link>
-                  <Link to="/shop?category=men&styleType=western&subcategory=shirt" onClick={() => setIsOpen(false)}>Shirt</Link>
-                  <Link to="/shop?category=men&styleType=western&subcategory=jeans" onClick={() => setIsOpen(false)}>Jeans</Link>
+            {/* 👤 RESPONSIVE USER PORTAL ACCENT INSIDE MOBILE DRAWER */}
+            <div className="border-b border-gray-100 pb-4 mb-2">
+              {user ? (
+                <div className="flex items-center justify-between bg-gray-50 p-3 rounded-xl border border-gray-100">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 bg-gray-800 text-white font-bold rounded-full flex items-center justify-center text-xs">
+                      {user.name?.charAt(0).toUpperCase()}
+                    </div>
+                    <div>
+                      <p className="text-xs font-semibold text-gray-800">{user.name}</p>
+                    </div>
+                  </div>
+                  <button onClick={handleLogout} className="text-red-500 text-xs font-semibold hover:underline">
+                    Logout
+                  </button>
                 </div>
+              ) : (
+                <Link 
+                  to="/signup" 
+                  onClick={() => setIsOpen(false)}
+                  className="flex items-center gap-3 p-3 rounded-xl border border-gray-100 bg-gray-50 text-gray-800 hover:text-[#C19A6B]"
+                >
+                  <User size={18} />
+                  <span className="text-xs font-bold uppercase tracking-wider">Login / Register</span>
+                </Link>
               )}
             </div>
 
-            {/* WOMEN */}
-            <div>
-              <button
-                onClick={() => setMobileDropdown(mobileDropdown === "women" ? "" : "women")}
-                className="flex items-center justify-between w-full font-medium"
-              >
-                Women
-                <ChevronDown size={16} className={`transition-transform ${mobileDropdown === "women" ? "rotate-180" : ""}`} />
-              </button>
+            {/* LINK MATRIX */}
+            <div className="flex flex-col gap-4 text-black font-medium">
+              <Link to="/" onClick={() => setIsOpen(false)}>Home</Link>
 
-              {mobileDropdown === "women" && (
-                <div className="pl-3 mt-2 flex flex-col gap-2 text-sm">
-                  <p className="font-semibold text-xs text-gray-400 uppercase tracking-wider">Eastern</p>
-                  <Link to="/shop?category=women&styleType=eastern&subcategory=suit" onClick={() => setIsOpen(false)}>Suit</Link>
+              {/* ⚡ MOBILE BUTTON: TRY ON CLOTH */}
+              <Link to="/virtual-room" onClick={() => setIsOpen(false)} className="font-bold text-[#C19A6B]">
+                Try On Cloth
+              </Link>
 
-                  <p className="font-semibold text-xs text-gray-400 uppercase tracking-wider mt-2">Western</p>
-                  <Link to="/shop?category=women&styleType=western&subcategory=polo" onClick={() => setIsOpen(false)}>Polo</Link>
-                  <Link to="/shop?category=women&styleType=western&subcategory=shirt" onClick={() => setIsOpen(false)}>Shirt</Link>
-                </div>
-              )}
+              {/* MEN */}
+              <div>
+                <button
+                  onClick={() => setMobileDropdown(mobileDropdown === "men" ? "" : "men")}
+                  className="flex items-center justify-between w-full font-medium"
+                >
+                  Men
+                  <ChevronDown size={16} className={`transition-transform ${mobileDropdown === "men" ? "rotate-180" : ""}`} />
+                </button>
+
+                {mobileDropdown === "men" && (
+                  <div className="pl-3 mt-2 flex flex-col gap-2 text-sm text-gray-600">
+                    <p className="font-semibold text-xs text-gray-400 uppercase tracking-wider">Eastern</p>
+                    <Link to="/shop?category=men&styleType=eastern&subcategory=kurta" onClick={() => setIsOpen(false)}>Kurta</Link>
+
+                    <p className="font-semibold text-xs text-gray-400 uppercase tracking-wider mt-2">Western</p>
+                    <Link to="/shop?category=men&styleType=western&subcategory=polo" onClick={() => setIsOpen(false)}>Polo</Link>
+                    <Link to="/shop?category=men&styleType=western&subcategory=shirt" onClick={() => setIsOpen(false)}>Shirt</Link>
+                    <Link to="/shop?category=men&styleType=western&subcategory=jeans" onClick={() => setIsOpen(false)}>Jeans</Link>
+                  </div>
+                )}
+              </div>
+
+              {/* WOMEN */}
+              <div>
+                <button
+                  onClick={() => setMobileDropdown(mobileDropdown === "women" ? "" : "women")}
+                  className="flex items-center justify-between w-full font-medium"
+                >
+                  Women
+                  <ChevronDown size={16} className={`transition-transform ${mobileDropdown === "women" ? "rotate-180" : ""}`} />
+                </button>
+
+                {mobileDropdown === "women" && (
+                  <div className="pl-3 mt-2 flex flex-col gap-2 text-sm text-gray-600">
+                    <p className="font-semibold text-xs text-gray-400 uppercase tracking-wider">Eastern</p>
+                    <Link to="/shop?category=women&styleType=eastern&subcategory=suit" onClick={() => setIsOpen(false)}>Suit</Link>
+
+                    <p className="font-semibold text-xs text-gray-400 uppercase tracking-wider mt-2">Western</p>
+                    <Link to="/shop?category=women&styleType=western&subcategory=polo" onClick={() => setIsOpen(false)}>Polo</Link>
+                    <Link to="/shop?category=women&styleType=western&subcategory=shirt" onClick={() => setIsOpen(false)}>Shirt</Link>
+                  </div>
+                )}
+              </div>
+
+              {/* KIDS */}
+              <div>
+                <button
+                  onClick={() => setMobileDropdown(mobileDropdown === "kids" ? "" : "kids")}
+                  className="flex items-center justify-between w-full font-medium"
+                >
+                  Kids
+                  <ChevronDown size={16} className={`transition-transform ${mobileDropdown === "kids" ? "rotate-180" : ""}`} />
+                </button>
+
+                {mobileDropdown === "kids" && (
+                  <div className="pl-3 mt-2 flex flex-col gap-2 text-sm text-gray-600">
+                    <Link to="/shop?category=kids&subcategory=boys" onClick={() => setIsOpen(false)}>Boys Collection</Link>
+                    <Link to="/shop?category=kids&subcategory=girls" onClick={() => setIsOpen(false)}>Girls Collection</Link>
+                  </div>
+                )}
+              </div>
+
+              <Link to="/shop?productType=trending" onClick={() => setIsOpen(false)} className="text-red-500 font-semibold">
+                Sale
+              </Link>
+
+              
             </div>
-
-            {/* KIDS */}
-            <div>
-              <button
-                onClick={() => setMobileDropdown(mobileDropdown === "kids" ? "" : "kids")}
-                className="flex items-center justify-between w-full font-medium"
-              >
-                Kids
-                <ChevronDown size={16} className={`transition-transform ${mobileDropdown === "kids" ? "rotate-180" : ""}`} />
-              </button>
-
-              {mobileDropdown === "kids" && (
-                <div className="pl-3 mt-2 flex flex-col gap-2 text-sm">
-                  <Link to="/shop?category=kids&subcategory=boys" onClick={() => setIsOpen(false)}>Boys Collection</Link>
-                  <Link to="/shop?category=kids&subcategory=girls" onClick={() => setIsOpen(false)}>Girls Collection</Link>
-                </div>
-              )}
-            </div>
-
-            <Link to="/shop?productType=trending" onClick={() => setIsOpen(false)} className="text-red-500 font-semibold">
-              Sale
-            </Link>
-
-            <Link to="/return-exchange" onClick={() => setIsOpen(false)}>
-              Return & Exchange
-            </Link>
-
           </div>
         </div>
       </div>
+
     </nav>
   );
 }

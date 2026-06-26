@@ -1,5 +1,6 @@
 import { ArrowRight } from "lucide-react";
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 function Timer() {
   const initialTime = 7 * 60 * 60; // 7 hours in seconds
@@ -12,7 +13,7 @@ function Timer() {
   });
 
   // =========================
-  // TIMER LOGIC (FIXED)
+  // TIMER LOGIC
   // =========================
   useEffect(() => {
     if (leftTime <= 0) return;
@@ -35,7 +36,7 @@ function Timer() {
   }, [leftTime]);
 
   // =========================
-  // FORMAT TIME (FIXED)
+  // FORMAT TIME
   // =========================
   const formatTime = (time) => {
     const days = Math.floor(time / (24 * 3600));
@@ -54,67 +55,84 @@ function Timer() {
   const { days, hours, minutes, seconds } = formatTime(leftTime);
 
   return (
-    <section className="w-full bg-black overflow-hidden">
-      <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-10">
-        <div className="grid lg:grid-cols-2 gap-10 items-center min-h-[520px]">
+    <section className="w-full bg-[#070707] overflow-hidden relative py-16 lg:py-24 border-t border-neutral-900 select-none">
+      
+      {/* Background soft ambient glow */}
+      <div className="absolute top-1/2 right-1/4 w-80 h-80 bg-[#C19A6B]/5 rounded-full blur-[120px] pointer-events-none" />
 
-          {/* LEFT IMAGE */}
-          <div className="flex justify-center lg:justify-start">
-            <img
-              src="https://ecomtw.baseecom.com/main-files/assets/images/homepage-2/offerThumb2_1.png"
-              alt="offer"
-              className="w-full max-w-[600px] object-contain drop-shadow-2xl"
-            />
+      <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-10 relative z-10">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+
+          {/* 1️⃣ LEFT SIDE: CINEMATIC OFFER PREVIEW IMAGE */}
+          <div className="flex justify-center lg:justify-start order-2 lg:order-1">
+            <div className="w-full max-w-[540px] aspect-[4/5] rounded-xl overflow-hidden border border-neutral-800/60 bg-neutral-900/10 p-4 backdrop-blur-sm shadow-[0_20px_50px_rgba(0,0,0,0.4)] group">
+              <img
+                src="https://ecomtw.baseecom.com/main-files/assets/images/homepage-2/offerThumb2_1.png"
+                alt="Exclusive Flash Sale Collection Offer"
+                className="w-full h-full object-contain transition-transform duration-700 ease-out group-hover:scale-[1.03]"
+              />
+            </div>
           </div>
 
-          {/* RIGHT CONTENT */}
-          <div className="text-center lg:text-left py-8">
+          {/* 2️⃣ RIGHT SIDE: PREMIUM EDITORIAL CONTENT & COUNTER */}
+          <div className="text-center lg:text-left flex flex-col items-center lg:items-start order-1 lg:order-2 space-y-6">
 
-            <p className="text-white font-semibold text-[15px] mb-4 uppercase tracking-wide">
-              Clearing Sale
-            </p>
+            {/* Sub-label tag */}
+            <div className="inline-flex items-center gap-2 px-3 py-1 bg-neutral-900/80 border border-neutral-800/80 rounded-full">
+              <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-ping"></span>
+              <span className="text-[10px] uppercase tracking-[0.3em] text-neutral-300 font-mono font-semibold">
+                Limited Flash Window
+              </span>
+            </div>
 
-            <h1 className="text-[32px] sm:text-[44px] lg:text-[54px] font-bold text-white leading-tight">
-              “<span className="text-[#C19A6B]">50% Sale</span> On Selected Products”
+            {/* Main Header */}
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-serif tracking-tight text-neutral-100 leading-[1.15]">
+              Take <span className="text-[#C19A6B] italic font-light">50% Off</span> <br />
+              On Selected Luxury Lines
             </h1>
 
-            <p className="text-white text-[15px] leading-7 mt-5 max-w-[520px] mx-auto lg:mx-0">
-              Consectetur adipiscing elit. Integer nunc viverra laoreet est,
-              a pretium metus aliquam eget.
+            {/* Real Copywriting instead of Latin Placeholder */}
+            <p className="text-neutral-400 text-sm md:text-base font-light leading-relaxed max-w-xl">
+              Upgrade your wardrobe with premium fabrics and modern cuts. Our seasonal clearance event offers unmatched prices on high-end western silhouettes.
             </p>
 
-            {/* TIMER */}
-            <div className="flex flex-wrap justify-center lg:justify-start gap-4 mt-8">
+            {/* ⏳ RE-STYLED PREMIUM GLASSMORPHIC TIMER METRICS */}
+            <div className="flex flex-wrap justify-center lg:justify-start gap-4 pt-4">
 
-              <div className="w-[85px] h-[85px] rounded-full bg-white shadow-md flex flex-col items-center justify-center">
-                <h2 className="text-2xl font-bold">{days}</h2>
-                <span className="text-gray-500 text-xs">Day</span>
+              <div className="w-20 h-20 sm:w-22 sm:h-22 rounded-xl bg-neutral-900/40 border border-neutral-800/80 backdrop-blur-md flex flex-col items-center justify-center transition-all duration-300 hover:border-[#C19A6B]/40 shadow-xl group">
+                <h2 className="text-2xl sm:text-3xl font-serif font-medium text-neutral-100 group-hover:text-[#C19A6B] transition-colors">{days}</h2>
+                <span className="text-neutral-500 font-mono text-[10px] uppercase tracking-wider mt-0.5">Days</span>
               </div>
 
-              <div className="w-[85px] h-[85px] rounded-full bg-white shadow-md flex flex-col items-center justify-center">
-                <h2 className="text-2xl font-bold">{hours}</h2>
-                <span className="text-gray-500 text-xs">Hour</span>
+              <div className="w-20 h-20 sm:w-22 sm:h-22 rounded-xl bg-neutral-900/40 border border-neutral-800/80 backdrop-blur-md flex flex-col items-center justify-center transition-all duration-300 hover:border-[#C19A6B]/40 shadow-xl group">
+                <h2 className="text-2xl sm:text-3xl font-serif font-medium text-neutral-100 group-hover:text-[#C19A6B] transition-colors">{hours}</h2>
+                <span className="text-neutral-500 font-mono text-[10px] uppercase tracking-wider mt-0.5">Hours</span>
               </div>
 
-              <div className="w-[85px] h-[85px] rounded-full bg-white shadow-md flex flex-col items-center justify-center">
-                <h2 className="text-2xl font-bold">{minutes}</h2>
-                <span className="text-gray-500 text-xs">Min</span>
+              <div className="w-20 h-20 sm:w-22 sm:h-22 rounded-xl bg-neutral-900/40 border border-neutral-800/80 backdrop-blur-md flex flex-col items-center justify-center transition-all duration-300 hover:border-[#C19A6B]/40 shadow-xl group">
+                <h2 className="text-2xl sm:text-3xl font-serif font-medium text-neutral-100 group-hover:text-[#C19A6B] transition-colors">{minutes}</h2>
+                <span className="text-neutral-500 font-mono text-[10px] uppercase tracking-wider mt-0.5">Mins</span>
               </div>
 
-              <div className="w-[85px] h-[85px] rounded-full bg-white shadow-md flex flex-col items-center justify-center">
-                <h2 className="text-2xl font-bold">{seconds}</h2>
-                <span className="text-gray-500 text-xs">Sec</span>
+              <div className="w-20 h-20 sm:w-22 sm:h-22 rounded-xl bg-neutral-900/40 border border-neutral-800/80 backdrop-blur-md flex flex-col items-center justify-center transition-all duration-300 hover:border-[#C19A6B]/40 shadow-xl group">
+                <h2 className="text-2xl sm:text-3xl font-serif font-medium text-red-400 transition-colors animate-pulse">{seconds}</h2>
+                <span className="text-neutral-500 font-mono text-[10px] uppercase tracking-wider mt-0.5">Secs</span>
               </div>
 
             </div>
 
-            <button className="mt-10 bg-[#C19A6B] hover:bg-white transition text-black px-8 py-3 rounded-full font-semibold shadow-lg hover:scale-105">
-              Shop Now
-              <ArrowRight size={16} className="inline-block ml-2" />
-            </button>
+            {/* BOUTIQUE CALL TO ACTION BUTTON */}
+            <div className="pt-4 w-full sm:w-auto">
+              <Link to="/shop">
+                <button className="w-full sm:w-auto flex items-center justify-center gap-3 bg-neutral-100 hover:bg-[#C19A6B] text-neutral-950 hover:text-white px-10 py-4 text-xs uppercase tracking-[0.2em] font-mono font-medium transition-all duration-500 ease-in-out shadow-2xl hover:shadow-[0_10px_25px_rgba(193,154,107,0.25)] rounded-sm cursor-pointer group">
+                  <span>Shop The Sale</span>
+                  <ArrowRight size={14} className="transition-transform duration-300 group-hover:translate-x-1" />
+                </button>
+              </Link>
+            </div>
 
-            <p className="mt-8 text-[15px] text-white font-medium">
-              Limited Time Offer. Deal ends soon!
+            <p className="text-xs font-mono tracking-wide text-neutral-500 italic pt-2">
+              *Guaranteed stock allocation applies only while the countdown matrix remains active.
             </p>
 
           </div>

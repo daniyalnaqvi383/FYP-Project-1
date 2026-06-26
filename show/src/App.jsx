@@ -23,8 +23,7 @@ function App() {
   return (
     <>
       <ScrollToTop />
-  
-      <Navbar />
+      <Navbar/>
       <Routes>
         <Route path="/" element={<Hero />} />
         <Route path="/signup" element={<SignUP />} />
