@@ -4,15 +4,13 @@ import TryOnCanvas from './TryOnCanvas';
 
 const TryOnModal = ({ isOpen, onClose, product }) => {
   const [allProducts, setAllProducts] = useState([]); 
-  const [filteredProducts, setFilteredProducts] = useState([]); // 🎯 For search filters
+  const [filteredProducts, setFilteredProducts] = useState([]); 
   const [activeProduct, setActiveProduct] = useState(product);
   const [selectedFile, setSelectedFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const [loading, setLoading] = useState(false);
   const [fetching, setFetching] = useState(true); 
   const [aiResult, setAiResult] = useState(null);
-  
-  // 🔍 Track search queries inside the model panel
   const [searchQuery, setSearchQuery] = useState(""); 
 
   // 🌐 FETCH ALL PRODUCTS ON MATRIX OPEN
@@ -25,10 +23,9 @@ const TryOnModal = ({ isOpen, onClose, product }) => {
         const data = await res.json();
         
         if (data.success && Array.isArray(data.products)) {
-          // Sync reverse database records arrays
           const reversedData = [...data.products].reverse();
           setAllProducts(reversedData);
-          setFilteredProducts(reversedData); // Sync target query container
+          setFilteredProducts(reversedData); 
           
           if (!activeProduct && reversedData.length > 0) {
             setActiveProduct(reversedData[0]);
@@ -80,30 +77,50 @@ const TryOnModal = ({ isOpen, onClose, product }) => {
     }
   };
 
+  // ⚡ UPDATED DYNAMIC TRY-ON ENGINE (Cloudinary Integration Ready)
   const handleTryOnSubmit = async () => {
     if (!selectedFile) return alert("Please upload or capture a profile photo first.");
     if (!activeProduct) return alert("Please select a target apparel item first.");
 
     setLoading(true);
-    const formData = new FormData();
-    formData.append("user_photo", selectedFile);
-    
-    const targetImgUrl = activeProduct.images?.[0] || "";
-    formData.append("product_image_url", targetImgUrl); 
-    formData.append("productId", activeProduct._id);           
-    formData.append("userId", "65f1a2b3c4d5e6f7a8b9c0d1"); 
+    setAiResult(null); // Reset prev look
 
     try {
-      const response = await apiClient.post("/ai/process-tryon", formData, {
-        headers: { 'Content-Type': 'multipart/form-data' }
+      // Step A: Pehle user ki profile image ko Cloudinary par upload karein (Node backend optimization)
+      const uploadData = new FormData();
+      uploadData.append("file", selectedFile);
+      uploadData.append("upload_preset", "your_cloudinary_preset_name"); // ⚠️ Apna preset name yahan likhein
+
+      const cloudinaryRes = await fetch("https://api.cloudinary.com/v1_1/your_cloud_name/image/upload", { // ⚠️ Cloud name update karein
+        method: "POST",
+        body: uploadData,
+      });
+      
+      const uploadedImage = await cloudinaryRes.json();
+      const userCloudinaryUrl = uploadedImage.secure_url;
+
+      if (!userCloudinaryUrl) {
+        throw new Error("Cloudinary profile upload failed.");
+      }
+
+      // Step B: Target Product Image URL trace karein
+      const targetClothUrl = activeProduct.images?.[0] || "";
+
+      // Step C: Apne Node.js Express backend controller ko dynamic simple JSON payload bhejein
+      const response = await apiClient.post("/ai/process-tryon", {
+        personImageUrl: userCloudinaryUrl,
+        clothImageUrl: targetClothUrl
       });
 
       if (response.data.success) {
-        setAiResult(response.data.data);
+        // Response direct base64 image dynamic structure store karega
+        setAiResult({ renderOutput2D: response.data.tryOnImage });
+      } else {
+        alert(response.data.message || "AI execution pipeline error.");
       }
     } catch (error) {
       console.error("Express router pipeline failure:", error);
-      alert("AI Pipeline Connection Refused.");
+      alert("AI Pipeline Connection Refused or Image upload timeout.");
     } finally {
       setLoading(false);
     }
@@ -111,24 +128,19 @@ const TryOnModal = ({ isOpen, onClose, product }) => {
 
   return (
     <div className="fixed inset-0 z-50 bg-[#0d0d0d] text-white flex flex-col overflow-y-auto animate-in fade-in duration-300">
-      
       {/* HEADER BLOCK */}
       <header className="w-full border-b border-neutral-800/60 bg-[#0d0d0d]/90 backdrop-blur-md sticky top-0 z-30 px-6 py-4 flex justify-between items-center max-w-7xl mx-auto">
         <div>
           <span className="text-[10px] uppercase tracking-[0.3em] text-[#c5a880] block mb-1">Interactive Studio</span>
           <h2 className="text-xl font-serif tracking-wide text-neutral-100">Virtual Try-On Center</h2>
         </div>
-        <button 
-          onClick={onClose} 
-          className="px-5 py-2 rounded-sm border border-neutral-800 text-xs tracking-widest uppercase text-neutral-400 hover:bg-[#c5a880] hover:text-black hover:border-[#c5a880] transition-all duration-300"
-        >
+        <button onClick={onClose} className="px-5 py-2 rounded-sm border border-neutral-800 text-xs tracking-widest uppercase text-neutral-400 hover:bg-[#c5a880] hover:text-black hover:border-[#c5a880] transition-all duration-300">
           Close Studio ✕
         </button>
       </header>
 
       {/* THREE COLUMN GRID */}
       <main className="w-full max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8 p-6 lg:p-8 flex-1">
-        
         {/* COLUMN 1: USER IMAGE UPLOAD */}
         <section className="col-span-1 lg:col-span-3 bg-neutral-900/40 border border-neutral-800/60 p-5 rounded-2xl flex flex-col justify-between">
           <div className="space-y-4">
@@ -152,19 +164,11 @@ const TryOnModal = ({ isOpen, onClose, product }) => {
           </div>
         </section>
 
-        {/* COLUMN 2: LIVE PRODUCTS PANEL + INSTANT DYNAMIC SEARCH */}
+        {/* COLUMN 2: LIVE PRODUCTS PANEL */}
         <section className="col-span-1 lg:col-span-5 bg-neutral-900/40 border border-neutral-800/60 p-5 rounded-2xl flex flex-col justify-between">
           <div className="space-y-4 w-full h-full flex flex-col">
             <h3 className="text-xs uppercase tracking-widest text-[#c5a880] font-mono">02 / Select a Dress</h3>
-            
-            {/* Live Interactive Search Bar Input */}
-            <input 
-              type="text" 
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search fabrics, western styles, categories..." 
-              className="w-full bg-neutral-950 border border-neutral-800 rounded-lg px-4 py-2.5 text-xs text-neutral-300 focus:outline-none focus:border-[#c5a880]/60 transition"
-            />
+            <input type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder="Search fabrics, western styles, categories..." className="w-full bg-neutral-950 border border-neutral-800 rounded-lg px-4 py-2.5 text-xs text-neutral-300 focus:outline-none focus:border-[#c5a880]/60 transition" />
 
             {fetching ? (
               <div className="flex-1 flex flex-col items-center justify-center gap-2 text-xs font-mono text-neutral-500">
@@ -173,24 +177,13 @@ const TryOnModal = ({ isOpen, onClose, product }) => {
               </div>
             ) : (
               <div className="flex-1 overflow-y-auto max-h-[340px] pr-2 grid grid-cols-2 gap-3 custom-scrollbar">
-                {/* 🔍 CRITICAL FIX: Loop updates to absolute filteredProducts to render query variations instantly */}
                 {filteredProducts.length === 0 ? (
-                  <div className="col-span-2 text-center text-xs text-neutral-500 font-mono py-12">
-                    No matching apparel found.
-                  </div>
+                  <div className="col-span-2 text-center text-xs text-neutral-500 font-mono py-12">No matching apparel found.</div>
                 ) : (
                   filteredProducts.map((fab, index) => {
                     const currentImage = fab.images?.[0] || "https://via.placeholder.com/150";
                     return (
-                      <div 
-                        key={fab._id || index}
-                        onClick={() => setActiveProduct(fab)}
-                        className={`p-2 rounded-xl border cursor-pointer transition-all duration-300 bg-neutral-950/60 flex flex-col gap-2 ${
-                          activeProduct?._id === fab._id 
-                            ? 'border-[#c5a880] shadow-[0_0_15px_rgba(197,168,128,0.15)]' 
-                            : 'border-neutral-800/80 hover:border-neutral-700'
-                        }`}
-                      >
+                      <div key={fab._id || index} onClick={() => setActiveProduct(fab)} className={`p-2 rounded-xl border cursor-pointer transition-all duration-300 bg-neutral-950/60 flex flex-col gap-2 ${activeProduct?._id === fab._id ? 'border-[#c5a880] shadow-[0_0_15px_rgba(197,168,128,0.15)]' : 'border-neutral-800/80 hover:border-neutral-700'}`}>
                         <div className="w-full aspect-[4/5] bg-neutral-900 rounded-lg overflow-hidden relative">
                           <img src={currentImage} alt={fab.name} className="w-full h-full object-cover" />
                           {activeProduct?._id === fab._id && (
@@ -211,7 +204,6 @@ const TryOnModal = ({ isOpen, onClose, product }) => {
         <section className="col-span-1 md:col-span-2 lg:col-span-4 bg-neutral-900/40 border border-neutral-800/60 p-5 rounded-2xl flex flex-col justify-between">
           <div className="space-y-4 flex-1 flex flex-col">
             <h3 className="text-xs uppercase tracking-widest text-[#c5a880] font-mono">03 / Generate Look</h3>
-            
             {activeProduct && (
               <div className="flex gap-3 items-center p-2.5 bg-neutral-950/80 border border-neutral-800/60 rounded-xl">
                 <img src={activeProduct.images?.[0] || "https://via.placeholder.com/150"} className="w-12 h-14 object-cover rounded bg-neutral-900 shrink-0" alt="" />
@@ -229,27 +221,16 @@ const TryOnModal = ({ isOpen, onClose, product }) => {
                 </div>
               ) : (
                 <div className="text-center p-4 space-y-2">
-                  <p className="text-[11px] font-light text-neutral-500 max-w-[180px] mx-auto leading-relaxed">
-                    Select a dress from the center panel to begin.
-                  </p>
+                  <p className="text-[11px] font-light text-neutral-500 max-w-[180px] mx-auto leading-relaxed">Select a dress from the center panel to begin.</p>
                 </div>
               )}
             </div>
           </div>
 
-          <button 
-            onClick={handleTryOnSubmit} 
-            disabled={loading || !activeProduct}
-            className={`w-full py-3.5 rounded-md font-mono text-xs uppercase tracking-[0.2em] transition-all duration-300 shadow-xl mt-4 ${
-              loading 
-                ? 'bg-neutral-800 text-neutral-500 cursor-not-allowed border border-neutral-700/30' 
-                : 'bg-[#c5a880] text-black hover:bg-[#b0946f] font-bold'
-            }`}
-          >
+          <button onClick={handleTryOnSubmit} disabled={loading || !activeProduct} className={`w-full py-3.5 rounded-md font-mono text-xs uppercase tracking-[0.2em] transition-all duration-300 shadow-xl mt-4 ${loading ? 'bg-neutral-800 text-neutral-500 cursor-not-allowed border border-neutral-700/30' : 'bg-[#c5a880] text-black hover:bg-[#b0946f] font-bold'}`}>
             {loading ? "🧬 Blending..." : "Generate Try-On"}
           </button>
         </section>
-
       </main>
     </div>
   );
