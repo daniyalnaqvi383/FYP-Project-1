@@ -1,6 +1,7 @@
 import { ArrowRight } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import Timerpics from "../assets/timer.png";
 
 function Timer() {
   const initialTime = 7 * 60 * 60; // 7 hours in seconds
@@ -63,11 +64,11 @@ function Timer() {
       <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-10 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
 
-          {/* 1️⃣ LEFT SIDE: CINEMATIC OFFER PREVIEW IMAGE */}
+          {/* 1️⃣ LEFT SIDE: CINEMATIC OFFER PREVIEW IMAGE (Border Removed) */}
           <div className="flex justify-center lg:justify-start order-2 lg:order-1">
-            <div className="w-full max-w-[540px] aspect-[4/5] rounded-xl overflow-hidden border border-neutral-800/60 bg-neutral-900/10 p-4 backdrop-blur-sm shadow-[0_20px_50px_rgba(0,0,0,0.4)] group">
+            <div className="w-full max-w-[540px] aspect-[4/5] overflow-hidden bg-transparent p-0 group">
               <img
-                src="https://ecomtw.baseecom.com/main-files/assets/images/homepage-2/offerThumb2_1.png"
+                src={Timerpics}
                 alt="Exclusive Flash Sale Collection Offer"
                 className="w-full h-full object-contain transition-transform duration-700 ease-out group-hover:scale-[1.03]"
               />
@@ -91,7 +92,6 @@ function Timer() {
               On Selected Luxury Lines
             </h1>
 
-            {/* Real Copywriting instead of Latin Placeholder */}
             <p className="text-neutral-400 text-sm md:text-base font-light leading-relaxed max-w-xl">
               Upgrade your wardrobe with premium fabrics and modern cuts. Our seasonal clearance event offers unmatched prices on high-end western silhouettes.
             </p>
