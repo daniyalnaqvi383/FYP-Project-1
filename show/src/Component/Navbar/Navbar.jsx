@@ -103,7 +103,7 @@ function Navbar() {
           </button>
 
           {/* LOGO */}
-          <Link to="/" className="flex items-center h-full py-2">
+          <Link to="/" className="flex items-center h-full py-2 -ml-2 md:-ml-8 lg:-ml-12">
             <img 
               src={logo} 
               alt="TryLo Logo" 
@@ -207,17 +207,13 @@ function Navbar() {
               Sales
             </Link>
 
-            {/* RETURN */}
-            <Link to="/returnexchange" className="hover:text-[#C19A6B] transition">
-              Return & Exchange
-            </Link>
-
             {/* ⚡ DESKTOP LINK BUTTON: TRY ON CLOTH */}
             <Link to="/virtual-room" className="hover:text-[#C19A6B] transition font-bold text-[#C19A6B]">
               Try On Cloth
             </Link>
 
           </div>
+
 
           {/* ICONS */}
           <div className="flex items-center space-x-3 md:space-x-5">
